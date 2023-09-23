@@ -1,0 +1,11 @@
+{
+  "name": "share-youtube-video",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.0",
+    "dotenv": "^16.3.1",
+    "googleapis": "^126.0.1"
+  }
+}
