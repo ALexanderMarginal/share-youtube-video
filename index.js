@@ -1,31 +1,46 @@
-import 'dotenv/config';
-import {google} from 'googleapis';
+import 'dotenv/config'
+import {getVideo, getVideoId} from './youTube.js';
+import {publicToTelegram} from './telegram.js';
 
-const {authenticate} = require('@google-cloud/local-auth');
+/**
+ * Get URL and additional text from arguments
+ * @returns {{additionalText: string, url: string} | undefined}
+ */
+const getArgs = () => {
+    if (process.argv.length === 2) {
+        console.error('Expected at least one argument!');
+        process.exit(1);
+    }
+    const args = process.argv.slice(2)
+    const url = args.shift()
+    const additionalText = args.join(' ')
+    return {url, additionalText}
+}
 
-const youtube = google.youtube('v3');
+/**
+ * @return {Promise<string>}
+ */
+const getMessage = async () => {
+    const {url, additionalText} = getArgs()
+    const videoId = getVideoId(url)
+    const videoInfo = await getVideo(videoId);
 
-const getVideo = async () => {
-    const auth = await authenticate({
-        keyfilePath: path.join(__dirname, './keyFile.json'),
-        scopes: ['https://www.googleapis.com/auth/youtube'],
-    });
-    google.options({auth});
+    const messageRows = [
+        videoInfo.title + ' ' + additionalText,
+        url
+    ]
 
-    const res = await youtube.search.list({
-        part: 'id,snippet',
-        q: 'Node.js on Google Cloud',
-    });
-    console.log(res.data);
+    return [
+        `${videoInfo?.title} ${additionalText}`,
+        url,
+        '\n',
+        videoInfo.description,
+    ].join('\n')
+}
+
+const start = async () => {
+    const message = await getMessage()
+    console.log(publicToTelegram(message))
 };
 
-function loadClient() {
-    gapi.client.setApiKey('YOUR_API_KEY');
-    return gapi.client.load('https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest')
-        .then(function () {
-                console.log('GAPI client loaded for API');
-            },
-            function (err) {
-                console.error('Error loading GAPI client for API', err);
-            });
-}
+start();
