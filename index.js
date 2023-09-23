@@ -18,6 +18,7 @@ const getArgs = () => {
 }
 
 /**
+ * Get message for social networks
  * @return {Promise<string>}
  */
 const getMessage = async () => {
