@@ -37,8 +37,8 @@ const getMessage = async () => {
 
 const start = async () => {
     const message = await getMessage();
-    //console.log(publicToTelegram(message));
-    console.log(publicToTwitter(message));
+    console.log(publicToTelegram(message));
+    //console.log(publicToTwitter(message));
 };
 
 start();
