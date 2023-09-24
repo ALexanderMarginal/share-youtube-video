@@ -7,12 +7,14 @@ import {default as youtubeSearchApi} from 'youtube-search-api';
  */
 export const getVideo = async (urlId) => {
     try {
-        const res = await youtubeSearchApi.GetVideoDetails(urlId)
+        const res = await youtubeSearchApi.GetVideoDetails(urlId);
         delete res.suggestion;
-        return res
+        return res;
     } catch (e) {
+        console.groupCollapsed('Youtube error');
         console.log(e);
-        return undefined
+        console.groupEnd();
+        return undefined;
     }
 };
 
@@ -22,5 +24,5 @@ export const getVideo = async (urlId) => {
  * @returns {string}
  */
 export const getVideoId = (url) => {
-    return /v=[^&]*/.exec(url)[0].replace('v=', '')
-}
+    return /v=[^&]*/.exec(url)[0].replace('v=', '');
+};

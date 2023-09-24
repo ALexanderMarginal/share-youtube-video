@@ -1,4 +1,4 @@
-import TelegramBot from 'node-telegram-bot-api'
+import TelegramBot from 'node-telegram-bot-api';
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: false});
 
@@ -10,9 +10,11 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: false});
 export const publicToTelegram = async (message) => {
     try {
         await bot.sendMessage(process.env.TELEGRAM_CHAT_ID, message);
-        return true
+        return true;
     } catch (e) {
+        console.groupCollapsed('Telegram error');
         console.log(e);
-        return false
+        console.groupEnd();
+        return false;
     }
-}
+};

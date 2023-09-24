@@ -1,6 +1,7 @@
-import 'dotenv/config'
+import 'dotenv/config';
 import {getVideo, getVideoId} from './youTube.js';
 import {publicToTelegram} from './telegram.js';
+import {publicToTwitter} from './twitter.js';
 
 /**
  * Get URL and additional text from arguments
@@ -11,37 +12,33 @@ const getArgs = () => {
         console.error('Expected at least one argument!');
         process.exit(1);
     }
-    const args = process.argv.slice(2)
-    const url = args.shift()
-    const additionalText = args.join(' ')
-    return {url, additionalText}
-}
+    const args = process.argv.slice(2);
+    const url = args.shift();
+    const additionalText = args.join(' ');
+    return {url, additionalText};
+};
 
 /**
  * Get message for social networks
  * @return {Promise<string>}
  */
 const getMessage = async () => {
-    const {url, additionalText} = getArgs()
-    const videoId = getVideoId(url)
+    const {url, additionalText} = getArgs();
+    const videoId = getVideoId(url);
     const videoInfo = await getVideo(videoId);
-
-    const messageRows = [
-        videoInfo.title + ' ' + additionalText,
-        url
-    ]
 
     return [
         `${videoInfo?.title} ${additionalText}`,
         url,
         '\n',
         videoInfo.description,
-    ].join('\n')
-}
+    ].join('\n');
+};
 
 const start = async () => {
-    const message = await getMessage()
-    console.log(publicToTelegram(message))
+    const message = await getMessage();
+    //console.log(publicToTelegram(message));
+    console.log(publicToTwitter(message));
 };
 
 start();
